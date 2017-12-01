@@ -1,8 +1,9 @@
-package org.mark.nativesocket;
+package org.mjd.nativesocket;
 
 import java.net.Socket;
 
 import com.sun.jna.Platform;
+import org.mjd.nativesocket.internal.LinuxSocket;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.mark.nativesocket;
+package org.mjd.nativesocket;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -10,6 +10,8 @@ import java.nio.channels.SocketChannel;
 import org.joda.time.Duration;
 import org.junit.Before;
 import org.junit.Test;
+import org.mjd.nativesocket.NativeSocket;
+import org.mjd.nativesocket.internal.LinuxSocket;
 
 
 public class LinuxSocketTest
