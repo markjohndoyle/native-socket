@@ -40,6 +40,11 @@ public class LinuxSocketTest
         socket = new Socket(server.socket().getInetAddress(), serverPort);
     }
 
+    /**
+     * Tests we can set the keep alive with a duration on an IO {@link Socket}
+     * 
+     * @throws IOException
+     */
     @Test
     public void testIoSocket() throws IOException
     {
@@ -47,6 +52,12 @@ public class LinuxSocketTest
         linSockUnderTest.setKeepAliveInterval(Duration.standardSeconds(1));
     }
 
+    /**
+     * Tests we can set the keep alive with a duration on an IO {@link Socket} from a
+     * {@link SocketChannel}
+     * 
+     * @throws IOException
+     */
     @Test
     public void testNioSocket() throws IOException
     {
