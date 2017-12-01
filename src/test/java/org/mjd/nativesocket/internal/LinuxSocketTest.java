@@ -1,4 +1,4 @@
-package org.mjd.nativesocket;
+package org.mjd.nativesocket.internal;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -14,6 +14,11 @@ import org.mjd.nativesocket.NativeSocket;
 import org.mjd.nativesocket.internal.LinuxSocket;
 
 
+/**
+ * We could mock out the real sockets but it's relatively painless using the real constructs and
+ * we get an integration test thrown in. This makes the test platform specific of course, but if the
+ * library doens't work on this platform the test don't offer anything anyway!
+ */
 public class LinuxSocketTest
 {
     private SocketChannel socketChannel;
@@ -21,6 +26,10 @@ public class LinuxSocketTest
     private Socket socket;
 
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setupPerTest() throws Exception
     {
