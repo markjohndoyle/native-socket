@@ -57,7 +57,9 @@ public final class LinuxUtils
 
     /**
      * Loads the Native C standard library and returns it under the JNA {@link Structure} interface of type T
-     * 
+     *
+     * @param <T>
+     *            the interface type to load the native library behind
      * @param libraryInterface
      *            the interface to expose the C standard library under
      * @return native library of type T

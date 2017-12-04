@@ -43,7 +43,7 @@ public final class LinuxSocket implements NativeSocket
      * @param socket
      *            the socket to wrap by this {@link NativeSocket}
      * 
-     * @See {@link NativeSocketFactory}
+     * @see NativeSocket
      */
     public LinuxSocket(final Socket socket)
     {
@@ -81,7 +81,7 @@ public final class LinuxSocket implements NativeSocket
         IntByReference interval = new IntByReference();
         IntByReference idle = new IntByReference();
         IntByReference probes = new IntByReference();
-        IntByReference optionLen = new IntByReference(Ints.BYTES);
+        Pointer optionLen = new IntByReference(Ints.BYTES).getPointer();
         
         callC(sockLib.getsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, enabled.getPointer(), optionLen));
         callC(sockLib.getsockopt(fd, SOL_TCP, TCP_KEEPINTVL, interval.getPointer(), optionLen));
