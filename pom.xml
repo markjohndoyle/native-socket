@@ -1,15 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mark</groupId>
     <artifactId>native-socket</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
+
+    <name>Native Socket</name>
+    <url>https://github.com/markjohndoyle/native-socket</url>
+    <description>Expose native socket options unavailable to the JVM.</description>
 
     <dependencies>
         <dependency>
@@ -39,4 +42,24 @@
             <version>2.12.0</version>
         </dependency>
     </dependencies>
+    
+    <developers>
+        <developer>
+            <email>markjohndoyle@googlemail.com</email>
+            <name>Mark Doyle</name>
+            <url>https://github.com/markjohndoyle</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/markjohndoyle/native-socket</url>
+        <connection>scm:git:git@github.com/markjohndoyle/native-socket.git</connection>
+        <developerConnection>scm:git:git@github.com:markjohndoyle/native-socket.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/markjohndoyle/native-socket/issues</url>
+        <system>GitHub</system>
+    </issueManagement>
 </project>
