@@ -23,6 +23,10 @@ import static org.mjd.nativesocket.internal.LinuxUtils.callC;
 public final class LinuxSocket implements NativeSocket
 {
     private static final int SOL_SOCKET = 1;
+    private static final int SOL_TCP = 6;
+    private static final int TCP_KEEPIDLE = 4;
+    private static final int TCP_KEEPINTVL = 5;
+    private static final int TCP_KEEPCNT = 6;
     private static final int SO_KEEPALIVE = 9;
     private final int fd;
     private final SocketLibrary sockLib = loadStandardLibrary(SocketLibrary.class);
@@ -53,12 +57,44 @@ public final class LinuxSocket implements NativeSocket
             throw new IllegalStateException("The file descriptor cannot be determined for the given socket", e);
         }
     }
-
     @Override
     public void setKeepAliveInterval(Duration interval)
     {
-        IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getMillis()));
-        callC(sockLib.setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, newInterval, Pointer.SIZE));
+        IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getStandardSeconds()));
+        enableKeepAlive();
+        callC(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
     }
 
+    
+    @Override
+    public void setKeepAliveIdle(Duration idletime)
+    {
+        IntByReference newTime = new IntByReference(Ints.checkedCast(idletime.getStandardSeconds()));
+        enableKeepAlive();
+        callC(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, newTime.getPointer(), Ints.BYTES));
+    }
+    
+    @Override
+    public KeepAliveData getKeepAliveData()
+    {
+        IntByReference enabled = new IntByReference();
+        IntByReference interval = new IntByReference();
+        IntByReference idle = new IntByReference();
+        IntByReference probes = new IntByReference();
+        IntByReference optionLen = new IntByReference(Ints.BYTES);
+        
+        callC(sockLib.getsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, enabled.getPointer(), optionLen));
+        callC(sockLib.getsockopt(fd, SOL_TCP, TCP_KEEPINTVL, interval.getPointer(), optionLen));
+        callC(sockLib.getsockopt(fd, SOL_TCP, TCP_KEEPIDLE, idle.getPointer(), optionLen));
+        callC(sockLib.getsockopt(fd, SOL_TCP, TCP_KEEPCNT, probes.getPointer(), optionLen));
+        
+        return new KeepAliveData(CBool.fromInt(enabled.getValue()), probes.getValue(), interval.getValue(),
+                                 idle.getValue());
+    }
+
+    
+    private void enableKeepAlive()
+    {
+        callC(sockLib.setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, CBool.TRUE_PTR, Ints.BYTES));
+    }
 }

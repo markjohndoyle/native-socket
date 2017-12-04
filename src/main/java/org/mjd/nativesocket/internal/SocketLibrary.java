@@ -6,6 +6,7 @@
 package org.mjd.nativesocket.internal;
 
 import com.sun.jna.Library;
+import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
 
@@ -37,6 +38,16 @@ public interface SocketLibrary extends Library
      * @return Upon successful completion, setsockopt() shall return 0. Otherwise, -1 shall be returned and errno set to
      *         indicate the error.
      */
-    int setsockopt(int sockFileDesc, int level, int optionName, IntByReference optionValue, int optionLength);
+    int setsockopt(int sockFileDesc, int level, int optionName, Pointer optionValue, int optionLength);
+
+    /**
+     * 
+     * @param sockFileDesc
+     * @param level
+     * @param optionName
+     * @param optionValue
+     * @return
+     */
+    int getsockopt(int sockFileDesc, int level, int optionName, Pointer optionValue, IntByReference optionLength);
 
 }

@@ -1,10 +1,16 @@
 package org.mjd.nativesocket.internal;
 
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.SocketImpl;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
@@ -17,9 +23,9 @@ import static sun.misc.SharedSecrets.getJavaIOFileDescriptorAccess;
  */
 public final class LinuxUtils
 {
-    private static final int SET_OPT_ERROR = -1;
     private static final String C_LIB_NAME = "c";
-
+    private static final String PROC_ROOT = "/proc";
+    private static final int SET_OPT_ERROR = -1;
 
     private static final class SocketData
     {
@@ -106,5 +112,20 @@ public final class LinuxUtils
             throw new IllegalStateException("Setting socket option failed; the last OS error = " +
                             Native.getLastError());
         }
+    }
+    
+    /**
+     * Reads the proc file at the give sub path. Returns all lines in the proc files as a list of Strings
+     * 
+     * @param subPaths
+     *            the sub path to the proc file
+     * @return contents of the proc file in a List.
+     * @throws IOException
+     *             if the proc file cannot be read
+     */
+    public static List<String> readProc(String ... subPaths) throws IOException
+    {
+        Path procPath = Paths.get(PROC_ROOT, subPaths);
+        return Files.readAllLines(procPath, Charset.defaultCharset());
     }
 }
