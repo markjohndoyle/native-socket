@@ -15,7 +15,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mjd.nativesocket.NativeSocket;
 import org.mjd.nativesocket.NativeSocket.KeepAliveData;
-import org.mjd.nativesocket.NativeSocketFactory;
+import org.mjd.nativesocket.factories.LinuxNativeSocketFactory;
+import org.mjd.nativesocket.factories.NativeSocketFactory;
+import org.mjd.nativesocket.factories.NativeSocketStaticFactory;
 
 import static org.junit.Assert.assertEquals;
 

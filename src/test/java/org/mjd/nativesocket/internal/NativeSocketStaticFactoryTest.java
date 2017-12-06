@@ -6,7 +6,7 @@ import java.nio.channels.SocketChannel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mjd.nativesocket.NativeSocket;
-import org.mjd.nativesocket.NativeSocketFactory;
+import org.mjd.nativesocket.factories.NativeSocketStaticFactory;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class NativeSocketFactoryTest
+public class NativeSocketStaticFactoryTest
 {
     @Mock private Socket mockSocket;
     @Mock private SocketChannel mockSocketChannel;
@@ -22,14 +22,14 @@ public class NativeSocketFactoryTest
     @Test
     public void testCreateFromSocketOnThisSystem()
     {
-        NativeSocket nativeSocket = NativeSocketFactory.createFrom(mockSocket);
+        NativeSocket nativeSocket = NativeSocketStaticFactory.createFrom(mockSocket);
     }
 
     @Test
     public void testCreateFromSocketChannelOnThisSystem()
     {
         when(mockSocketChannel.socket()).thenReturn(mockSocket);
-        NativeSocket nativeSocket = NativeSocketFactory.createFrom(mockSocketChannel);
+        NativeSocket nativeSocket = NativeSocketStaticFactory.createFrom(mockSocketChannel);
     }
 
 }

@@ -8,7 +8,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import org.joda.time.Duration;
 import org.mjd.nativesocket.NativeSocket;
-import org.mjd.nativesocket.NativeSocketFactory;
+import org.mjd.nativesocket.factories.NativeSocketStaticFactory;
 
 import static org.mjd.nativesocket.internal.LinuxUtils.extractFileDescriptor;
 import static org.mjd.nativesocket.internal.LinuxUtils.loadStandardLibrary;
@@ -33,7 +33,7 @@ public final class LinuxSocket implements NativeSocket
 
 
     /**
-     * Do not use this directly, instead use the {@link NativeSocketFactory}
+     * Do not use this directly, instead use the {@link NativeSocketStaticFactory}
      * 
      * Constructs a {@link NativeSocket} for a Linux system, fully initialised and ready to use.
      * 

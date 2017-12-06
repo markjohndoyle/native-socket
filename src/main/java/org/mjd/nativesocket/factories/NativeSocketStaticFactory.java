@@ -1,20 +1,23 @@
-package org.mjd.nativesocket;
+package org.mjd.nativesocket.factories;
 
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
 import com.sun.jna.Platform;
+import org.mjd.nativesocket.NativeSocket;
 import org.mjd.nativesocket.internal.LinuxSocket;
 
 
 /**
  * Factory for creating {@link NativeSocket} instances. The Factory takes care of creating the correct
  * type of {@link NativeSocket} for your platform.
- *
+ * Note: The {@link NativeSocketFactory} is a more flexible method but requires you inject the correct
+ * factory into your application. This is better but you may have reasons for not following that strategy
+ * (which would be wrong).
  */
-public final class NativeSocketFactory
+public final class NativeSocketStaticFactory
 {
-    private NativeSocketFactory()
+    private NativeSocketStaticFactory()
     {
         // Factory class.
     }
