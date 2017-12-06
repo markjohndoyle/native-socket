@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
+import org.mjd.nativesocket.internal.JdkUtils.SocketData;
+import org.mjd.nativesocket.internal.JdkUtils.SocketImplData;
 
 import static sun.misc.SharedSecrets.getJavaIOFileDescriptorAccess;
 
@@ -26,29 +28,6 @@ public final class LinuxUtils
     private static final String C_LIB_NAME = "c";
     private static final String PROC_ROOT = "/proc";
     private static final int SET_OPT_ERROR = -1;
-
-    private static final class SocketData
-    {
-        /** Data class */
-        private SocketData()
-        {
-        }
-
-
-        public static final String GET_IMPL_METHOD = "getImpl";
-    }
-
-    private static final class SocketImplData
-    {
-        /** Data class */
-        private SocketImplData()
-        {
-        }
-
-
-        public static final String GET_FILE_DESC_METHOD = "getFileDescriptor";
-    }
-
 
     private LinuxUtils()
     {
