@@ -49,6 +49,22 @@
         </dependency>
     </dependencies>
     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.3.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Private-Package>org.mjd.nativesocket.internal.*</Private-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <developers>
         <developer>
             <email>markjohndoyle@googlemail.com</email>
@@ -68,4 +84,20 @@
         <url>https://github.com/markjohndoyle/native-socket/issues</url>
         <system>GitHub</system>
     </issueManagement>
+    
+    <distributionManagement>
+        <repository>
+            <id>dam.nexus.public</id>
+            <name>CGI Darmstadt Nexus repository</name>
+            <url>http://dam-build.groupinfra.de/nexus/content/repositories/thirdpartynar/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </distributionManagement>
+    
+    <packaging>bundle</packaging>
 </project>
