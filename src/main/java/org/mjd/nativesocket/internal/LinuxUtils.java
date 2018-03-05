@@ -45,7 +45,7 @@ public final class LinuxUtils
      */
     public static <T> T loadStandardLibrary(Class<T> libraryInterface)
     {
-        return Native.loadLibrary(C_LIB_NAME, libraryInterface);
+        return (T) Native.loadLibrary(C_LIB_NAME, libraryInterface);
     }
 
     /**
