@@ -40,7 +40,7 @@ public class NativeSocketStaticFactoryTest
     }
 
     @Test
-    public void testCreateFromSocketChannelOnThisSystem() throws IOException
+    public void testCreateFromSocketChannelOnThisSystem()
     {
         NativeSocket nativeSocket = NativeSocketStaticFactory.createFrom(socketChannel);
     }
