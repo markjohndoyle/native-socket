@@ -90,6 +90,114 @@ public class PosixSocketOnLinuxTest
     }
 
     /**
+     * Tests we can set the keep alive with an idle time on an IO {@link Socket}
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testIoSocketSetKeepAliveIdleTime() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socket, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
+
+        linSockUnderTest.setKeepAliveIdleTime(JodaTimeDuration.standardSeconds(2));
+
+        KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(2, keepAliveData.getIdleTime());
+    }
+
+    /**
+     * Tests we can set the keep alive with an idle time on an NIO {@link SocketChannel}
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testNioSocketChannelSetKeepAliveIdleTime() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socketChannel, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
+
+        linSockUnderTest.setKeepAliveIdleTime(JodaTimeDuration.standardSeconds(2));
+
+        KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(2, keepAliveData.getIdleTime());
+    }
+
+    /**
+     * Tests we can set the keep alive with an interval on an IO {@link Socket}
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testIoSocketSetKeepAliveInterval() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socket, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
+
+        linSockUnderTest.setKeepAliveInterval(JodaTimeDuration.standardSeconds(2));
+
+        KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(2, keepAliveData.getInterval());
+    }
+
+    /**
+     * Tests we can set the keep alive with an interval on an NIO {@link SocketChannel}
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testNioSocketChannelSetKeepAliveInterval() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socketChannel, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
+
+        linSockUnderTest.setKeepAliveInterval(JodaTimeDuration.standardSeconds(3));
+
+        KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(3, keepAliveData.getInterval());
+    }
+
+    /**
+     * Tests we can set the keep alive with probes counter on an IO {@link Socket}
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testIoSocketSetKeepAliveProbes() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socket, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
+
+        linSockUnderTest.setKeepAliveProbes(1);
+
+        KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(1, keepAliveData.getProbeCount());
+    }
+
+    /**
+     * Tests we can set the keep alive with probes on an NIO {@link SocketChannel}
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testNioSocketChannelSetKeepAliveProbes() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socketChannel, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
+
+        linSockUnderTest.setKeepAliveProbes(5);
+
+        KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(5, keepAliveData.getProbeCount());
+    }
+
+    /**
      * Tests we can set the keep alive with an idle time, interval and probes count on an IO {@link Socket}
      *
      * @throws IOException
@@ -102,9 +210,8 @@ public class PosixSocketOnLinuxTest
 
         JodaTimeDuration idleTime = JodaTimeDuration.standardSeconds(2);
         JodaTimeDuration interval = JodaTimeDuration.standardSeconds(1);
-        JodaTimeDuration probes = JodaTimeDuration.standardSeconds(3);
 
-        linSockUnderTest.setKeepAlive(idleTime, interval, probes);
+        linSockUnderTest.setKeepAlive(idleTime, interval, 3);
 
         KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
 
@@ -128,9 +235,8 @@ public class PosixSocketOnLinuxTest
 
         JodaTimeDuration idleTime = JodaTimeDuration.standardSeconds(6);
         JodaTimeDuration interval = JodaTimeDuration.standardSeconds(3);
-        JodaTimeDuration probes = JodaTimeDuration.standardSeconds(2);
 
-        linSockUnderTest.setKeepAlive(idleTime, interval, probes);
+        linSockUnderTest.setKeepAlive(idleTime, interval, 2);
 
         KeepAliveData keepAliveData = linSockUnderTest.getKeepAliveData();
 
@@ -188,9 +294,7 @@ public class PosixSocketOnLinuxTest
 
         assertThat(actualData.isEnabled(), is(false));
 
-        linSockUnderTest.setKeepAlive(JodaTimeDuration.standardSeconds(6),
-                JodaTimeDuration.standardSeconds(3),
-                JodaTimeDuration.standardSeconds(1));
+        linSockUnderTest.setKeepAlive(JodaTimeDuration.standardSeconds(6), JodaTimeDuration.standardSeconds(3), 1);
         actualData = linSockUnderTest.getKeepAliveData();
 
         assertThat(actualData.isEnabled(), is(true));
@@ -208,9 +312,7 @@ public class PosixSocketOnLinuxTest
         NativeSocket linSockUnderTest = new PosixSocket(socket, mockStdLib, new LinuxJdkFileDescriptorAccessor());
         when(mockPosixSocketLib.setsockopt(anyInt(), anyInt(), anyInt(), any(Pointer.class), anyInt())).thenReturn(-1);
 
-        linSockUnderTest.setKeepAlive(JodaTimeDuration.standardSeconds(6),
-                JodaTimeDuration.standardSeconds(3),
-                JodaTimeDuration.standardSeconds(1));
+        linSockUnderTest.setKeepAlive(JodaTimeDuration.standardSeconds(6), JodaTimeDuration.standardSeconds(3), 1);
     }
 
 
