@@ -68,20 +68,15 @@ public final class PosixSocket implements NativeSocket
     }
 
     @Override
-    public void setKeepAliveInterval(TimeDuration interval)
-    {
+    public void setKeepAlive(TimeDuration idleTime, TimeDuration interval, TimeDuration probes) {
+        IntByReference newTime = new IntByReference(Ints.checkedCast(idleTime.getStandardSeconds()));
         IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getStandardSeconds()));
-        enableKeepAlive();
-        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
-    }
+        IntByReference newProbes = new IntByReference(Ints.checkedCast(probes.getStandardSeconds()));
 
-
-    @Override
-    public void setKeepAliveIdle(TimeDuration idletime)
-    {
-        IntByReference newTime = new IntByReference(Ints.checkedCast(idletime.getStandardSeconds()));
         enableKeepAlive();
         socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, newTime.getPointer(), Ints.BYTES));
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPCNT, newProbes.getPointer(), Ints.BYTES));
     }
 
     @Override
