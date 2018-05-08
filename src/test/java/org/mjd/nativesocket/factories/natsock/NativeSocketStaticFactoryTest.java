@@ -1,4 +1,4 @@
-package org.mjd.nativesocket.internal;
+package org.mjd.nativesocket.factories.natsock;
 
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
@@ -6,7 +6,7 @@ import java.nio.channels.SocketChannel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mjd.nativesocket.NativeSocket;
-import org.mjd.nativesocket.factories.NativeSocketStaticFactory;
+import org.mjd.nativesocket.staticfactories.NativeSocketStaticFactory;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
