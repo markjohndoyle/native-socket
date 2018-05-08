@@ -1,8 +1,13 @@
 package org.mjd.nativesocket.factories.natsock;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mjd.nativesocket.NativeSocket;
@@ -10,14 +15,23 @@ import org.mjd.nativesocket.staticfactories.NativeSocketStaticFactory;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.when;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class NativeSocketStaticFactoryTest
 {
+    private SocketChannel socketChannel;
+    private ServerSocketChannel server;
+
     @Mock private Socket mockSocket;
-    @Mock private SocketChannel mockSocketChannel;
+
+    @Before
+    public void setupPerTest() throws Exception
+    {
+        final InetSocketAddress serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), 0);
+        server = ServerSocketChannel.open().bind(serverAddress);
+        final int serverPort = server.socket().getLocalPort();
+        socketChannel = SocketChannel.open(new InetSocketAddress(server.socket().getInetAddress(), serverPort));
+    }
 
     @Test
     public void testCreateFromSocketOnThisSystem()
@@ -26,10 +40,9 @@ public class NativeSocketStaticFactoryTest
     }
 
     @Test
-    public void testCreateFromSocketChannelOnThisSystem()
+    public void testCreateFromSocketChannelOnThisSystem() throws IOException
     {
-        when(mockSocketChannel.socket()).thenReturn(mockSocket);
-        NativeSocket nativeSocket = NativeSocketStaticFactory.createFrom(mockSocketChannel);
+        NativeSocket nativeSocket = NativeSocketStaticFactory.createFrom(socketChannel);
     }
 
 }

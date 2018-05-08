@@ -120,9 +120,9 @@ public class PosixSocketOnLinuxTest
      * @throws IOException
      */
     @Test
-    public void testNioSocketSetKeepAliveInterval() throws IOException
+    public void testNioSocketChannelSetKeepAlive() throws IOException
     {
-        NativeSocket linSockUnderTest = new PosixSocket(socketChannel.socket(),
+        NativeSocket linSockUnderTest = new PosixSocket(socketChannel,
                                                         StandardLibStaticFactory.getStandardLib(),
                                                         new LinuxJdkFileDescriptorAccessor());
 
@@ -141,7 +141,7 @@ public class PosixSocketOnLinuxTest
 
 
     /**
-     * Tests get keep alive data without previously setting it.
+     * Tests get keep alive data for {@link Socket} without previously setting it.
      *
      * @throws IOException
      */
@@ -150,6 +150,25 @@ public class PosixSocketOnLinuxTest
     {
         NativeSocket linSockUnderTest = new PosixSocket(socket, StandardLibStaticFactory.getStandardLib(),
                                                         new LinuxJdkFileDescriptorAccessor());
+
+        KeepAliveData actualData = linSockUnderTest.getKeepAliveData();
+
+        assertEquals(systemInterval, actualData.getInterval());
+        assertEquals(systemIdleTime, actualData.getIdleTime());
+        assertEquals(systemProbeCount, actualData.getProbeCount());
+        assertThat(actualData.isEnabled(), is(false));
+    }
+
+    /**
+     * Tests get keep alive data for {@link SocketChannel} without previously setting it.
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testNioSocketChannelGetKeepAliveData() throws IOException
+    {
+        NativeSocket linSockUnderTest = new PosixSocket(socketChannel, StandardLibStaticFactory.getStandardLib(),
+                new LinuxJdkFileDescriptorAccessor());
 
         KeepAliveData actualData = linSockUnderTest.getKeepAliveData();
 

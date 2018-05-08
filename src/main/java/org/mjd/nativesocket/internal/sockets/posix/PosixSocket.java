@@ -1,6 +1,7 @@
 package org.mjd.nativesocket.internal.sockets.posix;
 
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 
 import com.google.common.primitives.Ints;
 import com.sun.jna.Native;
@@ -60,6 +61,38 @@ public final class PosixSocket implements NativeSocket
         {
             sockLib = stdLib.loadStandardLibrary(PosixSocketLibrary.class);
             fd = Ints.checkedCast(fdAccessor.extractFileDescriptor(socket));
+        }
+        catch (FileDescriptorException e)
+        {
+            throw new IllegalStateException("The file descriptor cannot be determined for the given socket", e);
+        }
+    }
+
+    /**
+     * Do not use this directly, instead use the {@link NativeSocketStaticFactory}
+     *
+     * Constructs a {@link NativeSocket} for a Linux system, fully initialised and ready to use.
+     *
+     * <p>
+     * Requires the standard C library and sys/socket.h
+     *
+     * @param socketChannel
+     *            the socketChannel to wrap by this {@link NativeSocket}
+     * @param standardLib
+     *            strategy used to load the OS specific standard library.
+     * @param fileDescriptorAccessor
+     *            strategy used to extract file descriptor.
+     *
+     * @see NativeSocket
+     */
+    public PosixSocket(final SocketChannel socketChannel, StandardLib standardLib, FileDescriptorAccessor fileDescriptorAccessor)
+    {
+        this.stdLib = standardLib;
+        this.fdAccessor = fileDescriptorAccessor;
+        try
+        {
+            sockLib = stdLib.loadStandardLibrary(PosixSocketLibrary.class);
+            fd = Ints.checkedCast(fdAccessor.extractFileDescriptor(socketChannel));
         }
         catch (FileDescriptorException e)
         {

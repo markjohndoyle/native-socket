@@ -2,6 +2,7 @@ package org.mjd.nativesocket.internal.fd.linux;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 
 import org.mjd.nativesocket.internal.fd.FileDescriptorAccessor;
 
@@ -26,6 +27,20 @@ public final class LinuxJdkFileDescriptorAccessor implements FileDescriptorAcces
         }
         catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
                | InvocationTargetException e)
+        {
+            throw new FileDescriptorException(e);
+        }
+    }
+
+    @SuppressWarnings("restriction")
+    @Override
+    public long extractFileDescriptor(SocketChannel socketChannel) throws FileDescriptorException {
+        try
+        {
+            return getJavaIOFileDescriptorAccess().get(getJavaFileDescriptor(socketChannel));
+        }
+        catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalAccessException
+                | IllegalArgumentException e)
         {
             throw new FileDescriptorException(e);
         }

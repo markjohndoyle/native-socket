@@ -52,10 +52,16 @@ public final class NativeSocketStaticFactory
      *            the Java {@link SocketChannel} to create a Native socket from
      * @return new {@link NativeSocket} for this Platform
      * @see NativeSocket
-     * @see Socket
+     * @see SocketChannel
      */
     public static NativeSocket createFrom(SocketChannel socketChannel)
     {
-        return createFrom(socketChannel.socket());
+        if (isPlatformPosixCompliant())
+        {
+            return new PosixSocket(socketChannel, StandardLibStaticFactory.getStandardLib(),
+                    new LinuxJdkFileDescriptorAccessor());
+        }
+        throw new IllegalStateException("No Native socket implementation for this platform: " +
+                System.getProperty("os.name"));
     }
 }
