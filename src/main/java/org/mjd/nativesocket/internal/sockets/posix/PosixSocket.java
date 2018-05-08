@@ -101,13 +101,37 @@ public final class PosixSocket implements NativeSocket
     }
 
     @Override
-    public void setKeepAlive(TimeDuration idleTime, TimeDuration interval, TimeDuration probes) {
-        IntByReference newTime = new IntByReference(Ints.checkedCast(idleTime.getStandardSeconds()));
+    public void setKeepAliveInterval(TimeDuration interval) {
         IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getStandardSeconds()));
-        IntByReference newProbes = new IntByReference(Ints.checkedCast(probes.getStandardSeconds()));
 
         enableKeepAlive();
-        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, newTime.getPointer(), Ints.BYTES));
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
+    }
+
+    @Override
+    public void setKeepAliveIdleTime(TimeDuration idleTime) {
+        IntByReference newIdleTime = new IntByReference(Ints.checkedCast(idleTime.getStandardSeconds()));
+
+        enableKeepAlive();
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, newIdleTime.getPointer(), Ints.BYTES));
+    }
+
+    @Override
+    public void setKeepAliveProbes(long probes) {
+        IntByReference newProbes = new IntByReference(Ints.checkedCast(probes));
+
+        enableKeepAlive();
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPCNT, newProbes.getPointer(), Ints.BYTES));
+    }
+
+    @Override
+    public void setKeepAlive(TimeDuration idleTime, TimeDuration interval, long probes) {
+        IntByReference newIdleTime = new IntByReference(Ints.checkedCast(idleTime.getStandardSeconds()));
+        IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getStandardSeconds()));
+        IntByReference newProbes = new IntByReference(Ints.checkedCast(probes));
+
+        enableKeepAlive();
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, newIdleTime.getPointer(), Ints.BYTES));
         socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
         socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPCNT, newProbes.getPointer(), Ints.BYTES));
     }
