@@ -11,29 +11,23 @@ public interface NativeSocket
 {
     /**
      * Enables the keep alive mechanism on this {@link NativeSocket} with the given interval.
-     * The keep alive interval is the interval between sequential keep alive probes, regardless of
-     * what the connection has exchanged in the meantime
-     * <p>
-     * Note, this enables keep alive on this socket if not already enabled.
-     *
-     * @param interval
-     *            keep alive interval
-     */
-    void setKeepAliveInterval(TimeDuration interval);
-
-    /**
-     * Enables the keep alive mechanism on this {@link NativeSocket} with the given idle time.
      * The keep alive idle time is the  interval between the last data packet sent (simple ACKs
      * are not considered data) and the first keep alive probe; after the connection is
      * marked to need keep alive, this counter is not used any further.
      * <p>
+     * The keep alive interval is the interval between sequential keep alive probes, regardless of
+     * what the connection has exchanged in the meantime
+     * <p>
+     * The keep alive probes is the number of unsuccessful keep alive probes after which a
+     * connection is considered dead.
+     * <p>
      * Note, this enables keep alive on this socket if not already enabled.
      *
-     * @param idleTime
-     *            keep time interval
+     * @param idleTime keep alive idle time
+     * @param interval keep alive interval
+     * @param probes keep alive probes
      */
-    void setKeepAliveIdle(TimeDuration idleTime);
-
+    void setKeepAlive(TimeDuration idleTime, TimeDuration interval, TimeDuration probes);
 
     /**
      * Data class for keep alive information specific to a {@link NativeSocket}

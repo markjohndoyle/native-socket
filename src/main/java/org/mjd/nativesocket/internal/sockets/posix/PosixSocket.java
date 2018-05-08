@@ -1,6 +1,7 @@
 package org.mjd.nativesocket.internal.sockets.posix;
 
 import java.net.Socket;
+import java.nio.channels.SocketChannel;
 
 import com.google.common.primitives.Ints;
 import com.sun.jna.Native;
@@ -67,21 +68,48 @@ public final class PosixSocket implements NativeSocket
         }
     }
 
-    @Override
-    public void setKeepAliveInterval(TimeDuration interval)
+    /**
+     * Do not use this directly, instead use the {@link NativeSocketStaticFactory}
+     *
+     * Constructs a {@link NativeSocket} for a Linux system, fully initialised and ready to use.
+     *
+     * <p>
+     * Requires the standard C library and sys/socket.h
+     *
+     * @param socketChannel
+     *            the socketChannel to wrap by this {@link NativeSocket}
+     * @param standardLib
+     *            strategy used to load the OS specific standard library.
+     * @param fileDescriptorAccessor
+     *            strategy used to extract file descriptor.
+     *
+     * @see NativeSocket
+     */
+    public PosixSocket(final SocketChannel socketChannel, StandardLib standardLib, FileDescriptorAccessor fileDescriptorAccessor)
     {
-        IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getStandardSeconds()));
-        enableKeepAlive();
-        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
+        this.stdLib = standardLib;
+        this.fdAccessor = fileDescriptorAccessor;
+        try
+        {
+            sockLib = stdLib.loadStandardLibrary(PosixSocketLibrary.class);
+            fd = Ints.checkedCast(fdAccessor.extractFileDescriptor(socketChannel));
+        }
+        catch (FileDescriptorException e)
+        {
+            throw new IllegalStateException("The file descriptor cannot be determined for the given socket", e);
+        }
     }
 
-
     @Override
-    public void setKeepAliveIdle(TimeDuration idletime)
-    {
-        IntByReference newTime = new IntByReference(Ints.checkedCast(idletime.getStandardSeconds()));
+    public void setKeepAlive(TimeDuration idleTime, TimeDuration interval, TimeDuration probes) {
+        IntByReference newTime = new IntByReference(Ints.checkedCast(idleTime.getStandardSeconds()));
+        IntByReference newInterval = new IntByReference(Ints.checkedCast(interval.getStandardSeconds()));
+        IntByReference newProbes = new IntByReference(Ints.checkedCast(probes.getStandardSeconds()));
+
         enableKeepAlive();
         socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPIDLE, newTime.getPointer(), Ints.BYTES));
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPINTVL, newInterval.getPointer(), Ints.BYTES));
+        socketCall(sockLib.setsockopt(fd, SOL_TCP, TCP_KEEPCNT, newProbes.getPointer(), Ints.BYTES));
     }
 
     @Override

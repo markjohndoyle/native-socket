@@ -26,7 +26,7 @@ public class PosixNativeSocketFactory implements NativeSocketFactory
     @Override
     public NativeSocket createFrom(SocketChannel socketChannel)
     {
-        return new PosixSocket(socketChannel.socket(), StandardLibStaticFactory.getStandardLib(),
+        return new PosixSocket(socketChannel, StandardLibStaticFactory.getStandardLib(),
                                new LinuxJdkFileDescriptorAccessor());
     }
 }
