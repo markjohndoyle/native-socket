@@ -19,9 +19,9 @@ public final class JodaTimeDuration implements TimeDuration
         return new JodaTimeDuration(milliseconds);
     }
 
-    public static final JodaTimeDuration standardSeconds(int milliseconds)
+    public static final JodaTimeDuration standardSeconds(long seconds)
     {
-        return new JodaTimeDuration(TimeUnit.SECONDS.toMillis(milliseconds));
+        return new JodaTimeDuration(TimeUnit.SECONDS.toMillis(seconds));
     }
 
     @Override
